@@ -54,17 +54,30 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.red,
         title: Row(
           children: [
-            Icon(Icons.chair),
+            Icon(
+              Icons.chair_outlined,
+              color: Colors.white,
+            ),
             SizedBox(width: 8),
-            Text('FurniÚ'),
+            Text(
+              'FurniÚ',
+              style: TextStyle(
+                  fontFamily: 'Sansation',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.white),
+            ),
           ],
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              // Ação do menu
-            },
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context)
+                    .openEndDrawer(); // Abre o menu lateral direito
+              },
+            ),
           ),
         ],
       ),
@@ -75,7 +88,7 @@ class HomePage extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.filter_list),
+                  icon: Icon(Icons.filter_alt_outlined),
                   onPressed: () {
                     // Ação do filtro
                   },
@@ -105,6 +118,78 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      endDrawer: Drawer(
+        // Usar endDrawer para o menu do lado direito
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Olá, usuário!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Minha Conta'),
+              onTap: () {
+                // Ação para "Minha Conta"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_bag),
+              title: Text('Meus Pedidos'),
+              onTap: () {
+                // Ação para "Meus Pedidos"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.sell),
+              title: Text('Minhas Vendas'),
+              onTap: () {
+                // Ação para "Minhas Vendas"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.announcement),
+              title: Text('Meus Anúncios'),
+              onTap: () {
+                // Ação para "Meus Anúncios"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Configurações'),
+              onTap: () {
+                // Ação para "Configurações"
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Sair'),
+              onTap: () {
+                // Ação para "Sair"
+              },
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.red,
         selectedItemColor: Colors.white,
@@ -112,11 +197,11 @@ class HomePage extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-            label: '',
+            label: 'Comprar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.attach_money),
-            label: '',
+            label: 'Anunciar',
           ),
         ],
       ),
@@ -143,8 +228,8 @@ class ProductCard extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.red),
                 image: DecorationImage(
-                  // image: NetworkImage(product['image']),
                   image: AssetImage(product['image']),
                   fit: BoxFit.cover,
                 ),
@@ -158,9 +243,10 @@ class ProductCard extends StatelessWidget {
                   Text(
                     product['name'],
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Sansation',
+                        color: Colors.red),
                   ),
                   Text(
                     product['description'],
@@ -180,7 +266,7 @@ class ProductCard extends StatelessWidget {
                   Text(
                     'R\$${product['price'].toStringAsFixed(2)}',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
                       color: Colors.red,
                     ),
@@ -188,17 +274,29 @@ class ProductCard extends StatelessWidget {
                   if (product['isSponsored'])
                     Row(
                       children: [
-                        Text(
-                          'Patrocinado',
-                          style: TextStyle(
-                            color: Colors.yellow[800],
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          color: Colors.yellow,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 24),
+                                child: Text(
+                                  'Patrocinado',
+                                  style: TextStyle(
+                                    fontFamily: 'Sansation',
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.star,
+                                color: Colors.red,
+                              ),
+                            ],
                           ),
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow[800],
-                          size: 16,
                         ),
                       ],
                     ),
