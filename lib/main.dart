@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furniu/screens/my-sales-page.dart';
 
 void main() {
   runApp(FurniUApp());
@@ -119,7 +120,6 @@ class HomePage extends StatelessWidget {
         ],
       ),
       endDrawer: Drawer(
-        // Usar endDrawer para o menu do lado direito
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -162,7 +162,10 @@ class HomePage extends StatelessWidget {
               leading: Icon(Icons.sell),
               title: Text('Minhas Vendas'),
               onTap: () {
-                // Ação para "Minhas Vendas"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MySalesPage()),
+                );
               },
             ),
             ListTile(
