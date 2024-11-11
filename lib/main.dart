@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:furniu/screens/my-sales-page.dart';
+import 'package:furniu/screens/advertise.dart';
 
 void main() {
   runApp(FurniUApp());
@@ -19,7 +19,15 @@ class FurniUApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final PageController _pageController = PageController();
+  int _selectedIndex = 0;
+
   final List<Map<String, dynamic>> products = [
     {
       "id": "1",
@@ -75,48 +83,60 @@ class HomePage extends StatelessWidget {
             builder: (context) => IconButton(
               icon: Icon(Icons.menu, color: Colors.white),
               onPressed: () {
-                Scaffold.of(context)
-                    .openEndDrawer(); // Abre o menu lateral direito
+                Scaffold.of(context).openEndDrawer(); // Abre o menu lateral direito
               },
             ),
           ),
         ],
       ),
-      body: Column(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.filter_alt_outlined),
-                  onPressed: () {
-                    // Ação do filtro
-                  },
-                ),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Pesquisar',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+          // Página principal com a lista de produtos
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.filter_alt_outlined),
+                      onPressed: () {
+                        // Ação do filtro
+                      },
+                    ),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Pesquisar',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return ProductCard(key: Key(product["id"]), product: product);
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return ProductCard(key: Key(product["id"]), product: product);
-              },
-            ),
-          ),
+          // Página de anúncio
+          AdvertisePage(),
         ],
       ),
       endDrawer: Drawer(
@@ -162,10 +182,7 @@ class HomePage extends StatelessWidget {
               leading: Icon(Icons.sell),
               title: Text('Minhas Vendas'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MySalesPage()),
-                );
+                // Ação para "Minhas Vendas"
               },
             ),
             ListTile(
@@ -197,6 +214,17 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.red,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          _pageController.animateToPage(
+            index,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
@@ -215,8 +243,7 @@ class HomePage extends StatelessWidget {
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
 
-  const ProductCard({required Key key, required this.product})
-      : super(key: key);
+  const ProductCard({required Key key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
