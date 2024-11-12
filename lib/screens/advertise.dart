@@ -6,6 +6,7 @@ class AdvertisePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
+        iconTheme: IconThemeData(color: Colors.white),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
