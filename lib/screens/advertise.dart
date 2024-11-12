@@ -11,15 +11,6 @@ class AdvertisePage extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                // Ação para o botão Cancelar
-              },
-              child: Text(
-                'Cancelar',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
                 // Ação para o botão Limpar
               },
               child: Text(
