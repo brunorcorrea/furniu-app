@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:furniu/screens/advertise.dart';
+import 'screens/advertise.dart';
+
+import 'screens/my-sales-page.dart';
 
 void main() {
   runApp(FurniUApp());
@@ -83,7 +85,8 @@ class _HomePageState extends State<HomePage> {
             builder: (context) => IconButton(
               icon: Icon(Icons.menu, color: Colors.white),
               onPressed: () {
-                Scaffold.of(context).openEndDrawer(); // Abre o menu lateral direito
+                Scaffold.of(context)
+                    .openEndDrawer(); // Abre o menu lateral direito
               },
             ),
           ),
@@ -129,7 +132,8 @@ class _HomePageState extends State<HomePage> {
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
-                    return ProductCard(key: Key(product["id"]), product: product);
+                    return ProductCard(
+                        key: Key(product["id"]), product: product);
                   },
                 ),
               ),
@@ -182,7 +186,10 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.sell),
               title: Text('Minhas Vendas'),
               onTap: () {
-                // Ação para "Minhas Vendas"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MySalesPage()),
+                );
               },
             ),
             ListTile(
@@ -243,7 +250,8 @@ class _HomePageState extends State<HomePage> {
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
 
-  const ProductCard({required Key key, required this.product}) : super(key: key);
+  const ProductCard({required Key key, required this.product})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
