@@ -8,9 +8,9 @@ class MySalesPage extends StatelessWidget {
       "description": "Pouco uso e bem conservado",
       "price": 120.00,
       "buyer": "Gabriel Jefferson",
-      "buyerImage": "../assets/buyer1.png",
+      "buyerImage": "assets/buyer1.png",
       "buyerRating": 4.0,
-      "image": "../assets/stand_with_doors.png",
+      "image": "assets/stand_with_doors.png",
     },
     {
       "id": "2",
@@ -18,9 +18,9 @@ class MySalesPage extends StatelessWidget {
       "description": "Bastante uso e bem conservado",
       "price": 255.00,
       "buyer": "Mardoqueu Vaz",
-      "buyerImage": "../assets/buyer2.png",
+      "buyerImage": "assets/buyer2.png",
       "buyerRating": 3.0,
-      "image": "../assets/mirror.png",
+      "image": "assets/mirror.png",
     },
   ];
 

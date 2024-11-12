@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
       'name': 'Colchão de solteiro de molas',
       'description': 'Pouco uso e bem conservado',
       'price': 400.00,
-      'image': '../assets/mattress.png',
+      'image': 'assets/mattress.png',
       'isSponsored': true,
     },
     {
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
       'name': 'Escrivaninha',
       'description': '70x40 cm',
       'price': 50.00,
-      'image': '../assets/desk.png',
+      'image': 'assets/desk.png',
       'isSponsored': false,
     },
     {
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       'description': 'Pouco uso e bem conservado',
       'price': 75.00,
       'oldPrice': 80.00,
-      'image': '../assets/stand.png',
+      'image': 'assets/stand.png',
       'isSponsored': false,
     },
   ];
