@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 
+import 'my-sales-page.dart';
+
 class ProductDetails extends StatelessWidget {
   final String imageUrl;
   final String productName;
   final String price;
   final String description;
   final bool isSponsored;
-  // final List<String> paymentMethods;
-  // final String sellerName;
-  // final double sellerRating;
-  // final int sellerSales;
-  // final String deliveryInfo;
-  // final String warrantyInfo;
-  // final String installmentInfo;
-
-/*
-
- "id": "1",
-      'name': 'Colchão de solteiro de molas',
-      'description': 'Pouco uso e bem conservado',
-      'price': 400.00,
-      'image': 'assets/mattress.png',
-      'isSponsored': true,
-*/
+  final List<String> paymentMethods;
+  final String sellerName;
+  final double sellerRating;
+  final int sellerSales;
+  final String deliveryInfo;
+  final String warrantyInfo;
+  final String installmentInfo;
 
   const ProductDetails({
     Key? key,
@@ -31,13 +23,13 @@ class ProductDetails extends StatelessWidget {
     required this.price,
     required this.description,
     required this.isSponsored,
-    // required this.paymentMethods,
-    // required this.sellerName,
-    // required this.sellerRating,
-    // required this.sellerSales,
-    // required this.deliveryInfo,
-    // required this.warrantyInfo,
-    // required this.installmentInfo,
+    required this.paymentMethods,
+    required this.sellerName,
+    required this.sellerRating,
+    required this.sellerSales,
+    required this.deliveryInfo,
+    required this.warrantyInfo,
+    required this.installmentInfo,
   }) : super(key: key);
 
   @override
@@ -48,9 +40,14 @@ class ProductDetails extends StatelessWidget {
         backgroundColor: Colors.red,
         iconTheme: IconThemeData(color: Colors.white),
         actions: [
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {},
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context)
+                    .openEndDrawer(); // Abre o menu lateral direito
+              },
+            ),
           ),
         ],
       ),
@@ -71,14 +68,14 @@ class ProductDetails extends StatelessWidget {
                 child: Image.network(imageUrl, fit: BoxFit.cover),
               ),
               SizedBox(height: 16),
-              
+
               // Product Delivery, Warranty, and Installment Information
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // _buildInfoBox(Icons.local_shipping, deliveryInfo),
-                  // _buildInfoBox(Icons.verified, warrantyInfo),
-                  // _buildInfoBox(Icons.credit_card, installmentInfo),
+                  _buildInfoBox(Icons.local_shipping, deliveryInfo),
+                  _buildInfoBox(Icons.verified, warrantyInfo),
+                  _buildInfoBox(Icons.credit_card, installmentInfo),
                 ],
               ),
               SizedBox(height: 16),
@@ -87,24 +84,37 @@ class ProductDetails extends StatelessWidget {
               Text(
                 'R\$ $price',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 62,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
                 ),
               ),
               SizedBox(height: 8),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: paymentMethods
-              //       .map((method) => Padding(
-              //             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              //             child: Image.network(
-              //               method,
-              //               height: 24,
-              //             ),
-              //           ))
-              //       .toList(),
-              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: paymentMethods
+                    .map((method) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade700),
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Image.network(
+                                    method,
+                                    height:50,
+                                    width: 50,
+                                  )),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
               SizedBox(height: 16),
 
               // Buy and Chat Buttons
@@ -141,7 +151,7 @@ class ProductDetails extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "Esse é um colchão de solteiro com molas ensacadas individualmente, proporcionando suporte uniforme e conforto personalizado.",
+                description,
                 style: TextStyle(fontSize: 14),
               ),
               SizedBox(height: 16),
@@ -153,22 +163,97 @@ class ProductDetails extends StatelessWidget {
                     backgroundImage: NetworkImage(imageUrl),
                   ),
                   SizedBox(width: 8),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Text(sellerName, style: TextStyle(fontWeight: FontWeight.bold)),
-                  //     Row(
-                  //       children: [
-                  //         Icon(Icons.star, color: Colors.amber, size: 16),
-                  //         Text('$sellerRating • $sellerSales vendas'),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(sellerName,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.amber, size: 16),
+                          Text('$sellerRating • $sellerSales vendas'),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
           ),
+        ),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Olá, usuário!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Minha Conta'),
+              onTap: () {
+                // Ação para "Minha Conta"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_bag),
+              title: Text('Meus Pedidos'),
+              onTap: () {
+                // Ação para "Meus Pedidos"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.sell),
+              title: Text('Minhas Vendas'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MySalesPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.announcement),
+              title: Text('Meus Anúncios'),
+              onTap: () {
+                // Ação para "Meus Anúncios"
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Configurações'),
+              onTap: () {
+                // Ação para "Configurações"
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Sair'),
+              onTap: () {
+                // Ação para "Sair"
+              },
+            ),
+          ],
         ),
       ),
     );

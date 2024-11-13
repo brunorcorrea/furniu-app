@@ -14,13 +14,13 @@ class ProductDetailsPage extends StatelessWidget {
       price: product['price'].toStringAsFixed(2),
       description: product['description'],
       isSponsored: product['isSponsored'],
-      // paymentMethods: product['paymentMethods'],
-      // sellerName: product['sellerName'],
-      // sellerRating: product['sellerRating'],
-      // sellerSales: product['sellerSales'],
-      // deliveryInfo: product['deliveryInfo'],
-      // warrantyInfo: product['warrantyInfo'],
-      // installmentInfo: product['installmentInfo'],
+      paymentMethods: product['paymentMethods'],
+      sellerName: product['sellerName'],
+      sellerRating: product['sellerRating'],
+      sellerSales: product['sellerSales'],
+      deliveryInfo: product['deliveryInfo'],
+      warrantyInfo: product['warrantyInfo'],
+      installmentInfo: product['installmentInfo'],
     );
   }
 }
