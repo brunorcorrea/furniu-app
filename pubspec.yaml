@@ -72,6 +72,9 @@ flutter:
     - assets/nubank.png
     - assets/pix.png
     - assets/visa.png
+    - assets/seller.png
+    - assets/seller2.png
+    - assets/seller3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

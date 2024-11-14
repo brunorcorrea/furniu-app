@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/advertise.dart';
-
-import 'screens/my-sales-page.dart';
-import 'screens/product-details-page.dart';
+import 'screens/advertise_page.dart';
+import 'screens/my_sales_page.dart';
+import 'screens/product_details_page.dart';
 
 void main() {
   runApp(FurniUApp());
@@ -29,7 +28,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final PageController _pageController = PageController();
+  final TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 0;
+  String _searchQuery = '';
 
   final List<Map<String, dynamic>> products = [
     {
@@ -48,6 +49,7 @@ class _HomePageState extends State<HomePage> {
         'assets/nubank.png',
       ],
       'sellerName': 'João Silva',
+      'sellerImage': 'assets/seller3.png',
       'sellerRating': 4.5,
       'sellerSales': 120,
       'deliveryInfo': 'Entrega em até 5 dias úteis',
@@ -70,6 +72,7 @@ class _HomePageState extends State<HomePage> {
         'assets/nubank.png',
       ],
       'sellerName': 'Maria Oliveira',
+      'sellerImage': 'assets/seller.png',
       'sellerRating': 4.7,
       'sellerSales': 200,
       'deliveryInfo': 'Entrega em até 7 dias úteis',
@@ -93,6 +96,7 @@ class _HomePageState extends State<HomePage> {
         'assets/nubank.png',
       ],
       'sellerName': 'Carlos Pereira',
+      'sellerImage': 'assets/seller2.png',
       'sellerRating': 4.3,
       'sellerSales': 150,
       'deliveryInfo': 'Entrega em até 3 dias úteis',
@@ -100,6 +104,35 @@ class _HomePageState extends State<HomePage> {
       'installmentInfo': 'Até 10x sem juros',
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_updateSearchQuery);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _updateSearchQuery() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
+  }
+
+  List<Map<String, dynamic>> get _filteredProducts {
+    if (_searchQuery.isEmpty) {
+      return products;
+    } else {
+      return products
+          .where(
+              (product) => product['name'].toLowerCase().contains(_searchQuery))
+          .toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +177,6 @@ class _HomePageState extends State<HomePage> {
           });
         },
         children: [
-          // Página principal com a lista de produtos
           Column(
             children: [
               Padding(
@@ -159,6 +191,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                       child: TextField(
+                        controller: _searchController,
                         decoration: InputDecoration(
                           hintText: 'Pesquisar',
                           prefixIcon: Icon(Icons.search),
@@ -173,9 +206,9 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: products.length,
+                  itemCount: _filteredProducts.length,
                   itemBuilder: (context, index) {
-                    final product = products[index];
+                    final product = _filteredProducts[index];
                     return ProductCard(
                         key: Key(product["id"]), product: product);
                   },
@@ -290,10 +323,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
 
-  const ProductCard({required Key key, required this.product}) : super(key: key);
+  const ProductCard({required Key key, required this.product})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +338,7 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) {
-               return ProductDetailsPage(product: product);
+              return ProductDetailsPage(product: product);
             },
           ),
         );
