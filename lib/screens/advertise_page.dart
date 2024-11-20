@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class AdvertisePage extends StatefulWidget {
   const AdvertisePage({Key? key}) : super(key: key);
@@ -8,6 +12,7 @@ class AdvertisePage extends StatefulWidget {
 }
 
 class _AdvertisePageState extends State<AdvertisePage> {
+  File? uploadedImage;
   String selectedState = 'Acre';
 
   List<String> states = [
@@ -48,6 +53,22 @@ class _AdvertisePageState extends State<AdvertisePage> {
   double productPrice = 0;
   String finalValueText =
       "Valor final (Preço do produto + Adicionais + Taxa): R\$ 0,00";
+
+  Future<File?> pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) return null;
+
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = path.basename(pickedImage.path);
+    final directory = Directory('${appDir.path}/assets');
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+    final destinationPath = '${directory.path}/$fileName';
+    await pickedImage.saveTo(destinationPath);
+    return File(destinationPath);
+  }
 
   void calculateAdditionalValue() {
     additionalValue = 0;
@@ -228,8 +249,16 @@ class _AdvertisePageState extends State<AdvertisePage> {
             const SizedBox(height: 10),
             // Botão de Adicionar Foto
             GestureDetector(
-              onTap: () {
-                // Ação para adicionar foto
+              onTap: () async {
+                final savedImage = await pickImageFromGallery();
+                if (savedImage != null) {
+                  setState(() {
+                    uploadedImage = savedImage;
+                  });
+                  print('Foto salva em: ${savedImage.path}');
+                } else {
+                  print('Nenhuma foto selecionada');
+                }
               },
               child: Container(
                 width: 100,
@@ -238,10 +267,18 @@ class _AdvertisePageState extends State<AdvertisePage> {
                   border: Border.all(color: Colors.red),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.red,
-                  size: 40,
+                child: Padding(
+                  padding: EdgeInsets.all(4),
+                  child: uploadedImage != null
+                      ? Image.file(
+                          uploadedImage!,
+                          fit: BoxFit.cover,
+                        )
+                      : Icon(
+                          Icons.camera_alt,
+                          color: Colors.red,
+                          size: 40,
+                        ),
                 ),
               ),
             ),
