@@ -77,8 +77,11 @@ class ProductDetails extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.red),
                     borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: AssetImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  child: Image.network(imageUrl, fit: BoxFit.cover),
                 ),
               ),
 
@@ -128,7 +131,7 @@ class ProductDetails extends StatelessWidget {
                               ),
                               child: Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Image.network(
+                                  child: Image.asset(
                                     method,
                                     height: 50,
                                     width: 50,
@@ -183,7 +186,7 @@ class ProductDetails extends StatelessWidget {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(sellerImage),
+                    backgroundImage: AssetImage(sellerImage),
                   ),
                   SizedBox(width: 8),
                   Column(
@@ -306,7 +309,7 @@ class FullScreenImage extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
-        child: Image.network(
+        child: Image.asset(
           imageUrl,
           fit: BoxFit.contain,
         ),
