@@ -116,6 +116,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  List<Product> sortProductsBySponsorship(List<Product> products) {
+    products.sort((a, b) {
+      if (a.isSponsored && !b.isSponsored) {
+        return -1;
+      } else if (!a.isSponsored && b.isSponsored) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    return products;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -138,8 +151,10 @@ class _HomePageState extends State<HomePage> {
 
   List<Product> get _filteredProducts {
     if (_searchQuery.isEmpty) {
+      sortProductsBySponsorship(products);
       return products.toList();
     } else {
+      sortProductsBySponsorship(products);
       return products
           .where((product) =>
               product.name.toLowerCase().contains(_searchQuery) ||

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../screens/my_sales_page.dart';
@@ -78,7 +80,9 @@ class ProductDetails extends StatelessWidget {
                     border: Border.all(color: Colors.red),
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: AssetImage(imageUrl),
+                      image: imageUrl.startsWith("assets")
+                          ? AssetImage(imageUrl) as ImageProvider
+                          : FileImage(File(imageUrl)),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -314,10 +318,15 @@ class FullScreenImage extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
-        child: Image.asset(
-          imageUrl,
-          fit: BoxFit.contain,
-        ),
+        child: imageUrl.startsWith("assets")
+            ? Image.asset(
+                imageUrl,
+                fit: BoxFit.contain,
+              )
+            : Image.file(
+                File(imageUrl),
+                fit: BoxFit.contain,
+              ),
       ),
     );
   }
