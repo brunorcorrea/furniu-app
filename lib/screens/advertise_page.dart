@@ -8,6 +8,38 @@ class AdvertisePage extends StatefulWidget {
 }
 
 class _AdvertisePageState extends State<AdvertisePage> {
+  String selectedState = 'Acre';
+
+  List<String> states = [
+    'Acre',
+    'Alagoas',
+    'Amapá',
+    'Amazonas',
+    'Bahia',
+    'Ceará',
+    'Distrito Federal',
+    'Espírito Santo',
+    'Goiás',
+    'Maranhão',
+    'Mato Grosso',
+    'Mato Grosso do Sul',
+    'Minas Gerais',
+    'Pará',
+    'Paraíba',
+    'Paraná',
+    'Pernambuco',
+    'Piauí',
+    'Rio de Janeiro',
+    'Rio Grande do Norte',
+    'Rio Grande do Sul',
+    'Rondônia',
+    'Roraima',
+    'Santa Catarina',
+    'São Paulo',
+    'Sergipe',
+    'Tocantins',
+  ];
+
   bool isFastDelivery = false;
   bool isGuaranteedDelivery = false;
   bool isSponsored = false;
@@ -82,15 +114,15 @@ class _AdvertisePageState extends State<AdvertisePage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.grey[300],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Categorias"),
-                  TextButton(
-                    onPressed: () {
-                      // Ação para selecionar Categoria/Subcategoria
-                    },
-                    child: Text("Categoria/Subcategoria"),
+                  const Text("Descrição"),
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: "Digite a descrição do anúncio",
+                      border: InputBorder.none,
+                    ),
                   ),
                 ],
               ),
@@ -104,11 +136,19 @@ class _AdvertisePageState extends State<AdvertisePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Localização"),
-                  TextButton(
-                    onPressed: () {
-                      // Ação para selecionar Estado/Região
+                  DropdownButton<String>(
+                    value: selectedState,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedState = newValue!;
+                      });
                     },
-                    child: Text("Selecionar Estado/Região"),
+                    items: states.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
