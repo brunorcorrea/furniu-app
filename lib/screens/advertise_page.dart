@@ -1,12 +1,46 @@
 import 'package:flutter/material.dart';
 
-class AdvertisePage extends StatelessWidget {
+class AdvertisePage extends StatefulWidget {
+  const AdvertisePage({Key? key}) : super(key: key);
+
+  @override
+  State<AdvertisePage> createState() => _AdvertisePageState();
+}
+
+class _AdvertisePageState extends State<AdvertisePage> {
+  bool isFastDelivery = false;
+  bool isGuaranteedDelivery = false;
+  bool isSponsored = false;
+  double additionalValue = 0;
+  double finalValue = 0;
+  double productPrice = 0;
+  String finalValueText =
+      "Valor final (Preço do produto + Adicionais + Taxa): R\$ 0,00";
+
+  void calculateAdditionalValue() {
+    additionalValue = 0;
+    if (isFastDelivery) {
+      additionalValue += 5;
+    }
+    if (isGuaranteedDelivery) {
+      additionalValue += 10;
+    }
+    if (isSponsored) {
+      additionalValue += 20;
+    }
+
+    finalValue = productPrice + additionalValue + (productPrice * 0.15);
+    finalValueText =
+        "Valor final (Preço do produto + Adicionais + Taxa): R\$ ${finalValue.toStringAsFixed(2)}";
+    print(finalValueText);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -14,7 +48,7 @@ class AdvertisePage extends StatelessWidget {
               onPressed: () {
                 // Ação para o botão Limpar
               },
-              child: Text(
+              child: const Text(
                 'Limpar',
                 style: TextStyle(color: Colors.white),
               ),
@@ -26,9 +60,27 @@ class AdvertisePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Campo de Título
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.grey[300],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Título"),
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: "Título do anúncio",
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
             // Campo de Categoria
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.grey[300],
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,10 +95,10 @@ class AdvertisePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Campo de Localização
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.grey[300],
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,57 +113,79 @@ class AdvertisePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Campo de Preço
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.grey[300],
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Preço (R\$)"),
+                  const Text("Preço (R\$)"),
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Valor",
                       border: InputBorder.none,
                     ),
                     keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        if (value.isEmpty) {
+                          productPrice = 0;
+                          calculateAdditionalValue();
+                          return;
+                        }
+
+                        productPrice = double.parse(value);
+                        calculateAdditionalValue();
+                        print(productPrice);
+                      });
+                    },
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Filtros de Anúncio
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               color: Colors.grey[300],
-              child: Text("Adicione ao seu anúncio:"),
+              child: const Text("Adicione ao seu anúncio:"),
             ),
-            Divider(),
+            const Divider(),
             CheckboxListTile(
-              title: Text("Entrega Rápida"),
-              value: false,
+              title: const Text("Entrega Rápida (R\$5,00)"),
+              value: isFastDelivery,
               onChanged: (bool? value) {
-                // Ação para filtro de Entrega Rápida
+                setState(() {
+                  isFastDelivery = value!;
+                  calculateAdditionalValue();
+                });
               },
             ),
-            Divider(),
+            const Divider(),
             CheckboxListTile(
-              title: Text("Entrega Garantida"),
-              value: false,
+              title: const Text("Entrega Garantida (R\$10,00)"),
+              value: isGuaranteedDelivery,
               onChanged: (bool? value) {
-                // Ação para filtro de Entrega Garantida
+                setState(() {
+                  isGuaranteedDelivery = value!;
+                  calculateAdditionalValue();
+                });
               },
             ),
-            Divider(),
+            const Divider(),
             CheckboxListTile(
-              title: Text("Patrocinado"),
-              value: false,
+              title: const Text("Patrocinado (R\$20,00)"),
+              value: isSponsored,
               onChanged: (bool? value) {
-                // Ação para filtro de Patrocinado
+                setState(() {
+                  isSponsored = value!;
+                  calculateAdditionalValue();
+                });
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Botão de Adicionar Foto
             GestureDetector(
               onTap: () {
@@ -124,15 +198,24 @@ class AdvertisePage extends StatelessWidget {
                   border: Border.all(color: Colors.red),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.camera_alt,
                   color: Colors.red,
                   size: 40,
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 50),
             // Botão de Publicar Anúncio
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                finalValueText,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -142,7 +225,7 @@ class AdvertisePage extends StatelessWidget {
                 onPressed: () {
                   // Ação para o botão Publicar Anúncio
                 },
-                child: Text(
+                child: const Text(
                   "Publicar Anúncio",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
