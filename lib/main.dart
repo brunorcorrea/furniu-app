@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:furniu/model/product.dart';
 import 'screens/advertise_page.dart';
 import 'screens/my_sales_page.dart';
 import 'screens/product_details_page.dart';
@@ -32,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   String _searchQuery = '';
 
-  final List<Map<String, dynamic>> products = [
+  final List<Map<String, dynamic>> rawProducts = [
     {
       "id": "1",
       'name': 'Colchão de solteiro de molas',
@@ -105,10 +108,20 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
+  List<Product> products = [];
+
+  void addProduct(Product product) {
+    setState(() {
+      products.add(product);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_updateSearchQuery);
+
+    products = rawProducts.map((data) => Product.fromMap(data)).toList();
   }
 
   @override
@@ -123,13 +136,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List<Map<String, dynamic>> get _filteredProducts {
+  List<Product> get _filteredProducts {
     if (_searchQuery.isEmpty) {
-      return products;
+      return products.toList();
     } else {
       return products
-          .where(
-              (product) => product['name'].toLowerCase().contains(_searchQuery))
+          .where((product) =>
+              product.name.toLowerCase().contains(_searchQuery) ||
+              product.description.toLowerCase().contains(_searchQuery))
           .toList();
     }
   }
@@ -209,15 +223,15 @@ class _HomePageState extends State<HomePage> {
                   itemCount: _filteredProducts.length,
                   itemBuilder: (context, index) {
                     final product = _filteredProducts[index];
-                    return ProductCard(
-                        key: Key(product["id"]), product: product);
+                    return ProductCard(key: Key(product.id), product: product);
                   },
                 ),
               ),
             ],
           ),
           // Página de anúncio
-          AdvertisePage(),
+
+          AdvertisePage(addProduct: addProduct),
         ],
       ),
       endDrawer: Drawer(
@@ -325,7 +339,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ProductCard extends StatelessWidget {
-  final Map<String, dynamic> product;
+  final Product product;
 
   const ProductCard({required Key key, required this.product})
       : super(key: key);
@@ -356,7 +370,9 @@ class ProductCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.red),
                   image: DecorationImage(
-                    image: AssetImage(product['image']),
+                    image: product.image.startsWith("assets")
+                        ? AssetImage(product.image) as ImageProvider
+                        : FileImage(File(product.image)),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -367,7 +383,7 @@ class ProductCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product['name'],
+                      product.name,
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -375,29 +391,29 @@ class ProductCard extends StatelessWidget {
                           color: Colors.red),
                     ),
                     Text(
-                      product['description'],
+                      product.description,
                       style: TextStyle(
                         color: Colors.grey[600],
                       ),
                     ),
                     SizedBox(height: 5),
-                    if (product.containsKey('oldPrice'))
+                    if (product.oldPrice != null)
                       Text(
-                        'R\$${product['oldPrice'].toStringAsFixed(2)}',
+                        'R\$${product.oldPrice?.toStringAsFixed(2)}',
                         style: TextStyle(
                           color: Colors.grey,
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
                     Text(
-                      'R\$${product['price'].toStringAsFixed(2)}',
+                      'R\$${product.price.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
                       ),
                     ),
-                    if (product['isSponsored'])
+                    if (product.isSponsored)
                       Row(
                         children: [
                           Container(

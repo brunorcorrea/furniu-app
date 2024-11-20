@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:furniu/model/product.dart';
 
 class MySalesPage extends StatelessWidget {
-  final List<Map<String, dynamic>> soldProducts = [
-    {
-      "id": "1",
-      "name": "Armário duas portas",
-      "description": "Pouco uso e bem conservado",
-      "price": 120.00,
-      "buyer": "Gabriel Jefferson",
-      "buyerImage": "assets/buyer1.png",
-      "buyerRating": 4.0,
-      "image": "assets/stand_with_doors.png",
-    },
-    {
-      "id": "2",
-      "name": "Espelho",
-      "description": "Bastante uso e bem conservado",
-      "price": 255.00,
-      "buyer": "Mardoqueu Vaz",
-      "buyerImage": "assets/buyer2.png",
-      "buyerRating": 3.0,
-      "image": "assets/mirror.png",
-    },
+  final List<Product> soldProducts = [
+    Product.optional(
+      id: "1",
+      name: "Armário duas portas",
+      description: "Pouco uso e bem conservado",
+      price: 120.00,
+      sellerName: "Gabriel Jefferson",
+      sellerImage: "assets/buyer1.png",
+      sellerRating: 4.0,
+      image: "assets/stand_with_doors.png",
+    ),
+    Product.optional(
+      id: "2",
+      name: "Espelho",
+      description: "Bastante uso e bem conservado",
+      price: 255.00,
+      sellerName: "Mardoqueu Vaz",
+      sellerImage: "assets/buyer2.png",
+      sellerRating: 3.0,
+      image: "assets/mirror.png",
+    ),
   ];
 
   @override
@@ -122,7 +123,7 @@ class MySalesPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.green),
                           image: DecorationImage(
-                            image: AssetImage(product['image']),
+                            image: AssetImage(product.image),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -133,7 +134,7 @@ class MySalesPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              product['name'],
+                              product.name,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -141,14 +142,14 @@ class MySalesPage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              product['description'],
+                              product.description,
                               style: TextStyle(
                                 color: Colors.grey[600],
                               ),
                             ),
                             SizedBox(height: 5),
                             Text(
-                              'R\$${product['price'].toStringAsFixed(2)}',
+                              'R\$${product.price.toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -163,15 +164,15 @@ class MySalesPage extends StatelessWidget {
                   Divider(),
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage(product['buyerImage']),
+                      backgroundImage: AssetImage(product.sellerImage),
                     ),
-                    title: Text(product['buyer']),
+                    title: Text(product.sellerName),
                     subtitle: Text("Comprador"),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: List.generate(5, (i) {
                         return Icon(
-                          i < product['buyerRating']
+                          i < product.sellerRating
                               ? Icons.star
                               : Icons.star_border,
                           color: Colors.yellow,

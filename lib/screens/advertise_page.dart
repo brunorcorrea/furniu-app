@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:furniu/main.dart';
+import 'package:furniu/model/product.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class AdvertisePage extends StatefulWidget {
-  const AdvertisePage({Key? key}) : super(key: key);
+  final Function(Product) addProduct;
+
+  const AdvertisePage({Key? key, required this.addProduct}) : super(key: key);
 
   @override
   State<AdvertisePage> createState() => _AdvertisePageState();
@@ -53,6 +57,8 @@ class _AdvertisePageState extends State<AdvertisePage> {
   double productPrice = 0;
   String finalValueText =
       "Valor final (Preço do produto + Adicionais + Taxa): R\$ 0,00";
+  String title = '';
+  String description = '';
 
   Future<File?> pickImageFromGallery() async {
     final picker = ImagePicker();
@@ -99,7 +105,18 @@ class _AdvertisePageState extends State<AdvertisePage> {
           children: [
             TextButton(
               onPressed: () {
-                // Ação para o botão Limpar
+                setState(() {
+                  title = '';
+                  description = '';
+                  isFastDelivery = false;
+                  isGuaranteedDelivery = false;
+                  isSponsored = false;
+                  additionalValue = 0;
+                  finalValue = 0;
+                  productPrice = 0;
+                  finalValueText =
+                      "Valor final (Preço do produto + Adicionais + Taxa): R\$ 0,00";
+                });
               },
               child: const Text(
                 'Limpar',
@@ -126,6 +143,11 @@ class _AdvertisePageState extends State<AdvertisePage> {
                       hintText: "Título do anúncio",
                       border: InputBorder.none,
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        title = value;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -144,6 +166,11 @@ class _AdvertisePageState extends State<AdvertisePage> {
                       hintText: "Digite a descrição do anúncio",
                       border: InputBorder.none,
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        description = value;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -300,7 +327,50 @@ class _AdvertisePageState extends State<AdvertisePage> {
                   backgroundColor: Colors.red,
                 ),
                 onPressed: () {
-                  // Ação para o botão Publicar Anúncio
+                  if (uploadedImage == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text("Por favor, adicione uma imagem.")),
+                    );
+                    return;
+                  }
+
+                  final newProduct = Product(
+                    id: DateTime.now().toString(),
+                    name: title,
+                    description:
+                        description + "\n\nLocalização: $selectedState",
+                    price: finalValue,
+                    image: uploadedImage!.path,
+                    isSponsored: isSponsored,
+                    paymentMethods: [
+                      'assets/mastercard.png',
+                      'assets/visa.png',
+                      'assets/pix.png',
+                      'assets/elo.png',
+                      'assets/hipercard.png',
+                      'assets/nubank.png',
+                    ],
+                    sellerName: 'Cleide',
+                    sellerImage: 'assets/seller.png',
+                    sellerRating: 4.5,
+                    sellerSales: 100,
+                    deliveryInfo: isFastDelivery
+                        ? 'Entrega em até 5 dias úteis'
+                        : 'Entrega em até 10 dias úteis',
+                    warrantyInfo: isGuaranteedDelivery
+                        ? 'Garantia de 30 dias'
+                        : 'Sem garantia',
+                    installmentInfo: 'Até 12x sem juros',
+                  );
+
+                  widget.addProduct(newProduct);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Anúncio publicado com sucesso!"),
+                    ),
+                  );
                 },
                 child: const Text(
                   "Publicar Anúncio",
