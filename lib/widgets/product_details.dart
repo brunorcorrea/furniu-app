@@ -100,7 +100,7 @@ class ProductDetails extends StatelessWidget {
               Text(
                 'R\$ $price',
                 style: TextStyle(
-                  fontSize: 62,
+                  fontSize: 60,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
                 ),
@@ -116,30 +116,35 @@ class ProductDetails extends StatelessWidget {
                 ),
               SizedBox(height: 16),
               // Price and Payment Methods
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: paymentMethods
-                    .map((method) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(25.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade700),
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(25.0),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: paymentMethods
+                      .map((method) => Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(25.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey.shade700),
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Image.asset(
+                                      method,
+                                      height: 50,
+                                      width: 50,
+                                    )),
                               ),
-                              child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Image.asset(
-                                    method,
-                                    height: 50,
-                                    width: 50,
-                                  )),
                             ),
-                          ),
-                        ))
-                    .toList(),
+                          ))
+                      .toList(),
+                ),
               ),
               SizedBox(height: 16),
 
@@ -290,7 +295,7 @@ class ProductDetails extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.red),
         SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.red)),
+        Text(label, style: TextStyle(color: Colors.red, fontSize: 12)),
       ],
     );
   }
